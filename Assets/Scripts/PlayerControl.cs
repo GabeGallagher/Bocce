@@ -3,12 +3,12 @@ using System.Collections;
 
 public class PlayerControl : MonoBehaviour
 {
-    Ball ball;
+    BallControl ball;
 
 	// Use this for initialization
 	void Start ()
     {
-        ball = ball.GetComponent<Ball>();
+        ball = ball.GetComponent<BallControl>();
     }
 
     public void TossBall()

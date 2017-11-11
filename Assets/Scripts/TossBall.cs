@@ -6,7 +6,7 @@
 using UnityEngine;
 using System.Collections;
 
-[RequireComponent (typeof(Ball))]
+[RequireComponent (typeof(BallControl))]
 public class TossBall : MonoBehaviour
 {
     public delegate void OnSpaceKey();

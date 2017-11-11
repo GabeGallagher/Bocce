@@ -10,16 +10,17 @@ using System.Collections;
 
 public class ArrowControl : MonoBehaviour
 {
-    TossBall tossBall;
+    public TossBall tossBall;
 
     const float apex = 57.293f; // value of rotation at 0degrees. Lack of accuracy here is what causes the
                                 // arrow to stop slightly when it rotates straight ahead
 
     public bool isRotating = true;
 
-    private void Start()
+    void Start()
     {
-        tossBall = transform.parent.Find("Bocce").GetComponent<TossBall>();
+        int childCount = transform.parent.childCount;
+        tossBall = transform.parent.GetChild(childCount - 1).GetComponent<TossBall>();
         tossBall.spaceKeyObserver += SpaceKeyHander_ArrowControl;
     }
 
@@ -32,25 +33,19 @@ public class ArrowControl : MonoBehaviour
         }
     }
 
-    /* Returns the distance between the origin and the mouse world point. Since we already know the length
-     * of a (the distance between the z axis and the mouse world point) and b (the distance between the y
-     * axis and the mouse world point) and that angle C will always be 90deg, and that cos(90) is 0, we 
-     * simply square a and b and take the square root to get our length.
+    /* Gives the distance between the origin and the mouse world point. Since we already know the 
+     * length of a (the distance between the z axis and the mouse world point) and b (the distance 
+     * between the y axis and the mouse world point) and that angle C will always be 90deg, and that 
+     * cos(90) is 0, we simply square a and b and take the square root to get our length.
      */
     float LawOfCosines(float a, float b)
     {
         return Mathf.Sqrt((a * a) + (b * b));
     }
 
-    /* Returns the angle to rotate the arrow about the y axis. The law of sines tells us that 
-     * b/sinB = c/sinC. Since we are solving for sinB, we isolate it as the return value, and plug in the
-     * arguments. sinC will always be sin90, or 1, so we simply need to solve b/c.
+    /* Converts arrow rotation to +/- 90 degrees and returns a float that can be directly assigned to the
+     * transform.rotation of the arrow
      */
-    float LawOfSines(float b, float c)
-    {
-        return b / c;
-    }
-
     float ConvertArrowRotation(float rotation, float zLength)
     {
         float converstionRate = 1.5708f;
@@ -62,10 +57,15 @@ public class ArrowControl : MonoBehaviour
         return x * converstionRate;
     }
 
+    /* Uses ScreenToWorldPoint method to get the 3d coordinates of the cursor, then rotates the arrow to 
+     * point toward the cursor, allowing the player to determine the direction the ball will be tossed.
+     */
     void ArrowRotation()
     {
         Vector3 p = new Vector3();
+
         Camera c = Camera.main;
+
         Vector2 mousePos = new Vector2();
 
         mousePos.x = Input.mousePosition.x;
@@ -82,7 +82,12 @@ public class ArrowControl : MonoBehaviour
             pointA = 0; //max rotation of arrow is capped at a 180deg arc
         }
 
-        float expectedRotation = LawOfSines(pointA, LawOfCosines(pointC, pointA)) * Mathf.Rad2Deg;
+        /* Using the law of sines, we get the angle to rotate the arrow about the y axis. The law of 
+         * sines  tells us that b/sinB = c/sinC. Since we are solving for sinB, we isolate it as the 
+         * return value, and plug in the arguments. sinC will always be sin90, or 1, so we simply need 
+         * to solve b/c.
+         */
+        float expectedRotation = (pointA / LawOfCosines(pointC, pointA)) * Mathf.Rad2Deg;
 
         transform.rotation = Quaternion.Euler(0, ConvertArrowRotation(expectedRotation, pointC), 0);
     }
@@ -120,7 +125,7 @@ public class ArrowControl : MonoBehaviour
         GUILayout.Label("length side a: " + pointA); //side on y axis
         GUILayout.Label("length of side b: " + LawOfCosines(pointC, pointA)); //from origin to mouse point
         GUILayout.Label("length side c: " + pointC); //side on z axis
-        float expectedRotation = LawOfSines(pointA, LawOfCosines(pointC, pointA)) * Mathf.Rad2Deg;
+        float expectedRotation = (pointA / LawOfCosines(pointC, pointA)) * Mathf.Rad2Deg;
         GUILayout.Label("Expected arrow rotation: " + expectedRotation);
         GUILayout.Label("Actual rotation: " + ConvertArrowRotation(expectedRotation, pointC));
         //Max apex is 57.293 with about +/- .0025 variation based on aspect ratio and size of window. 

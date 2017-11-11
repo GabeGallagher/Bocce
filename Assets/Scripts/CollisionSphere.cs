@@ -15,7 +15,7 @@ public class CollisionSphere : MonoBehaviour
         if (trigger.tag != "Wall")
         {
             Debug.Log(trigger.name + " entered " + transform.parent.name + "'s collision sphere");
-            transform.parent.gameObject.GetComponent<Ball>().isObjectInCollisionArea = true;
+            transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = true;
         }
     }
 
@@ -24,7 +24,7 @@ public class CollisionSphere : MonoBehaviour
         if (trigger.tag != "Wall")
         {
             Debug.Log(trigger.name + " left " + transform.parent.name + "'s collision sphere");
-            transform.parent.gameObject.GetComponent<Ball>().isObjectInCollisionArea = false;
+            transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = false;
         }
     }
 }

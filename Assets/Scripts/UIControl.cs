@@ -25,16 +25,16 @@ public class UIControl : MonoBehaviour
         }
         else
         {
-            if (!balls.transform.GetChild(0).GetComponent<TossBall>())
+            int childCount = balls.transform.childCount;
+            if (!balls.transform.GetChild(childCount - 1).GetComponent<TossBall>())
             {
                 Debug.Log(name + " does not have the TossBall script attached to it");
             }
             else
             {
-                tossBall = balls.transform.GetChild(0).GetComponent<TossBall>(); 
+                tossBall = balls.transform.GetChild(childCount - 1).GetComponent<TossBall>(); 
             }
         }
-
         tossBall.spaceKeyObserver += SpaceKeyHander_UIControl;
 	}
 
