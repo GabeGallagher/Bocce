@@ -299,6 +299,8 @@ MonoBehaviour:
   boccePrefabRed: {fileID: 108948, guid: 02ea3e77a0dbaba45bd8032177a63fda, type: 2}
   isGreenTurn: 1
   sphereRadius: .25
+  redBocceCount: 0
+  greenBocceCount: 0
   notInstantiationFailed: 1
 --- !u!4 &445834590 stripped
 Transform:
@@ -393,7 +395,8 @@ Prefab:
       propertyPath: m_RootOrder
       value: 2
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 11421870, guid: 322f74108c2b5344b9d54f8e019e9ee8, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 322f74108c2b5344b9d54f8e019e9ee8, type: 2}
   m_IsPrefabParent: 0
 --- !u!1001 &587816196
@@ -721,6 +724,20 @@ GameObject:
 Transform:
   m_PrefabParentObject: {fileID: 437898, guid: 322f74108c2b5344b9d54f8e019e9ee8, type: 2}
   m_PrefabInternal: {fileID: 587064282}
+--- !u!114 &1193841120
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1193841118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b8b032f09ed4645870d9a35603aeed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ballsParent: {fileID: 431064080}
+  mainCamera: {fileID: 1690628974}
+  uI: {fileID: 1224993292}
 --- !u!1 &1224993289
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,6 +842,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sliderPrefab: {fileID: 133064, guid: 8d83dab62fd029946aad8ce6a837c8e9, type: 2}
   ball: {fileID: 0}
+  isDestroyed: 0
 --- !u!1001 &1496726400
 Prefab:
   m_ObjectHideFlags: 0
@@ -1045,6 +1063,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8cf0034d95e697b4b9fd575112f0b481, type: 2}
   m_IsPrefabParent: 0
+--- !u!20 &1690628974 stripped
+Camera:
+  m_PrefabParentObject: {fileID: 2026888, guid: 8cf0034d95e697b4b9fd575112f0b481,
+    type: 2}
+  m_PrefabInternal: {fileID: 1621624457}
 --- !u!1001 &1707743389
 Prefab:
   m_ObjectHideFlags: 0
@@ -1087,30 +1110,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0be3fb45549dcbc498e017e924bdcf65, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1766132019 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 108626, guid: 2d0eda7a43ce53a45bcc22c390e46d9f, type: 2}
-  m_PrefabInternal: {fileID: 1496726400}
---- !u!114 &1766132027
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1766132019}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 21e887417f4cbf2498d67512d682f750, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  liftAdjustment: 0
-  stopThreshold: 0
-  delayTime: 0
-  isObjectInCollisionArea: 0
-  isOnFloor: 0
-  hitWarningWall: 0
-  velocity: {x: 0, y: 0, z: 0}
-  isTossed: 0
-  isDead: 0
 --- !u!1 &1884715601
 GameObject:
   m_ObjectHideFlags: 0

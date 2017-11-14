@@ -12,15 +12,15 @@ public class CameraControl : MonoBehaviour
 
     public float changeTime; //Time between when a ball is killed and the camera switches to a new ball
 
-    Vector3 offset; //Designer can adjust this value by moving the camera in editor
+    public Vector3 offset; //Designer can adjust this value by moving the camera in editor
 
-    float callTime;
+    public float callTime;
 
     int childCount;
 
     bool isObservingKillCommand = true;
 
-    bool isChanging = false;
+    public bool isChanging = false;
 
     //Returns which ball the camera should follow
     GameObject GetBallCamFocuses()
@@ -57,7 +57,6 @@ public class CameraControl : MonoBehaviour
 	
 	void Update ()
     {
-        int newChildCount = GameObject.Find("Balls").transform.childCount;
         if (transform.position.y >= vanishingPlane.transform.position.y)
         {
             transform.position = ball.transform.localPosition + offset; 

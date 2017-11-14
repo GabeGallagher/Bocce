@@ -25,17 +25,16 @@ public class PowerBarControl : MonoBehaviour
         powerBar.value = CalculatePower();
     }
 
-    //void BallInstantiationHandler_PowerBarControl()
-    //{
-    //    Debug.Log("Power Ball Control")
-    //}
-
     // Use this for initialization
     void Start ()
     {
         Transform ballsParent = GameObject.Find("Balls").transform;
         int childCount = ballsParent.childCount;
         ball = ballsParent.GetChild(childCount - 1).GetComponent<BallControl>();
+        if (!ball)
+        {
+            Debug.Log("unable to get ball object");
+        }
         ball.spaceKeyObserver += SpaceKeyHandler_PowerBarControl;
         powerBar = gameObject.GetComponent<Slider>();
         powerBar.value = 0;

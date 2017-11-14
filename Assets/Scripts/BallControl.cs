@@ -24,7 +24,7 @@ public class BallControl : MonoBehaviour
 
     public bool isObjectInCollisionArea; // determines if there is an object that could collide with us
 
-    public bool isOnFloor, hitWarningWall = false;
+    public bool isOnFloor, isCounted = false, hitWarningWall = false;
 
     Rigidbody rBody;
 
@@ -51,7 +51,7 @@ public class BallControl : MonoBehaviour
     }
 
     //Throw the ball
-    public virtual void Toss(float force)
+    public void Toss(float force)
     {
         rBody.isKinematic = false;
         isTossed = true;
@@ -112,6 +112,23 @@ public class BallControl : MonoBehaviour
         {
             killCommandObserver();
             killCommandEnabled = true;
+
+            if (!isCounted)
+            {
+                if (gameObject.GetComponent<BocceControl>().isGreen)
+                {
+                    ++transform.parent.GetComponent<BallParent>().greenBocceCount;
+                }
+                else if (!gameObject.GetComponent<BocceControl>().isGreen)
+                {
+                    ++transform.parent.GetComponent<BallParent>().redBocceCount;
+                }
+                else
+                {
+                    Debug.Log("is Pallino");
+                }
+                isCounted = true;
+            }
         }
         else
         {
@@ -139,16 +156,7 @@ public class BallControl : MonoBehaviour
             isOnFloor = false;
         }
     }
-
-    void OnTriggerEnter(Collider trigger)
-    {
-        if (trigger.name == "VanishingPlane")
-        {
-            Destroy(gameObject, delayTime);
-        }
-    }
-
-    // Update is called once per frame
+    
     void Update ()
     {
         if (Input.GetKey(KeyCode.Space))

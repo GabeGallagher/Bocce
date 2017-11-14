@@ -23,6 +23,8 @@ public class BallParent : MonoBehaviour
 
     public float sphereRadius;
 
+    public int redBocceCount, greenBocceCount;
+
     public bool notInstantiationFailed = true;
 
     ArrowControl arrow;
@@ -35,55 +37,77 @@ public class BallParent : MonoBehaviour
         Debug.Log("New ball instantiated");
     }
 
+    void GetScore()
+    {
+        //go through each bocce in this game objects transform
+
+        //get the distance between that bocce and the pallino
+
+        //add the distances to a list
+
+        //sort the list
+
+        //get the color of the closest item in the list
+
+        //go through the sorted list and count how many of that color are closer to the pallino than the
+        //closest of the opposite color
+
+        //record that number as the score of the round
+
+        //start a new round
+    }
+
     void KillCommandHandler_BallParent()
     {
-        //Debug.Log("Ball Parent reading kill command");
-        if (!Physics.CheckSphere(transform.position, sphereRadius) && notInstantiationFailed)
+        if (greenBocceCount < 4 & redBocceCount < 4)
         {
-            if (!isGreenTurn)
+            if (!Physics.CheckSphere(transform.position, sphereRadius) && notInstantiationFailed)
             {
-                ball = Instantiate(boccePrefabGreen, transform.position, Quaternion.identity) as GameObject;
-                isGreenTurn = true;
+                InstantiateNewBocce();
             }
             else
             {
-                ball = Instantiate(boccePrefabRed, transform.position, Quaternion.identity) as GameObject;
-                isGreenTurn = false;
-            }
-            ball.transform.parent = transform;
-            ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
-            //ballInstantiationReporter += BallInstantiationReporter;
-            arrow = transform.GetChild(0).GetComponent<ArrowControl>();
-            arrow.ball = ball.GetComponent<BallControl>();
-            arrow.isRotating = true; 
+                Debug.Log("Tried to instantiate a new ball, but there is already something at the origin");
+                notInstantiationFailed = false;
+            } 
         }
         else
         {
-            Debug.Log("Tried to instantiate a new ball, but there is already something at the origin");
-            notInstantiationFailed = false;
+            Debug.Log("Moving to scoring");
         }
     }
-	
-	void Start ()
+
+    public void InstantiateNewBocce()
+    {
+        if (!isGreenTurn)
+        {
+            ball = Instantiate(boccePrefabGreen, transform.position, Quaternion.identity)
+                as GameObject;
+            ball.GetComponent<BocceControl>().isGreen = true;
+            isGreenTurn = true;
+        }
+        else
+        {
+            ball = Instantiate(boccePrefabRed, transform.position, Quaternion.identity)
+                as GameObject;
+            ball.GetComponent<BocceControl>().isGreen = false;
+            isGreenTurn = false;
+        }
+        ball.transform.parent = transform;
+        ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
+        arrow = transform.GetChild(0).GetComponent<ArrowControl>();
+        arrow.ball = ball.GetComponent<BallControl>();
+        arrow.isRotating = true;
+    }
+
+    void Start ()
     {
         ball = transform.GetChild(transform.childCount - 1).gameObject;
         ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
 	}
 	
-	// Update is called once per frame
 	void Update ()
     {
-        //if (ball.GetComponent<BallControl>().isTossed)
-        //{
-        //    Debug.Log(ball.name + " is tossed");
-        //    float timeSinceToss = Time.timeSinceLevelLoad;
-        //    float changeTime = GameObject.Find("Main Camera").GetComponent<CameraControl>().changeTime;
-        //    Debug.Log("Change time: " + changeTime);
 
-        //    if (Mathf.Approximately((Time.timeSinceLevelLoad - timeSinceToss), changeTime))
-        //    {
-        //        ball.GetComponent<BallControl>().killCommandObserver();
-        //    }
-        //}
 	}
 }

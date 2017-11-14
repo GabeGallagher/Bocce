@@ -11,28 +11,30 @@ public class UIControl : MonoBehaviour
 {
     public GameObject sliderPrefab;
 
-    GameObject balls;
+    GameObject ballsParent;
 
     public BallControl ball;
 
+    public bool isDestroyed = false; //Checks to see if a ball was destroyed by the shredder
+
     void Start ()
     {
-        balls = GameObject.Find("Balls");
+        ballsParent = GameObject.Find("Balls");
 
-        if (balls.transform.childCount <= 0)
+        if (ballsParent.transform.childCount <= 0)
         {
             Debug.Log("There are no balls on the court");
         }
         else
         {
-            int childCount = balls.transform.childCount;
-            if (!balls.transform.GetChild(childCount - 1).GetComponent<BallControl>())
+            int childCount = ballsParent.transform.childCount;
+            if (!ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>())
             {
-                Debug.Log(name + " does not have the TossBall script attached to it");
+                Debug.Log(name + " does not have the BallControl script attached to it");
             }
             else
             {
-                ball = balls.transform.GetChild(childCount - 1).GetComponent<BallControl>(); 
+                ball = ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>(); 
             }
         }
         ball.spaceKeyObserver += SpaceKeyHander_UIControl;
@@ -67,8 +69,15 @@ public class UIControl : MonoBehaviour
     {
 	    if (ball.gameObject.GetComponent<BallControl>().isDead)
         {
-            int childCount = balls.transform.childCount;
-            ball = balls.transform.GetChild(childCount - 1).GetComponent<BallControl>();
+            int childCount = ballsParent.transform.childCount;
+            ball = ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>();
+        }
+
+        if (isDestroyed)
+        {
+            int childCount = ballsParent.transform.childCount;
+            ball = ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>();
+            isDestroyed = false;
         }
 	}
 }
