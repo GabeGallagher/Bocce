@@ -13,7 +13,6 @@ GameObject:
   - 23: {fileID: 2322152}
   - 54: {fileID: 5427812}
   - 114: {fileID: 11488080}
-  - 114: {fileID: 11444050}
   m_Layer: 0
   m_Name: BocceGreen
   m_TagString: Ball
@@ -109,18 +108,6 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &11444050
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 126432}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b9c8523b4f173a742b24c0336afa9068, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ball: {fileID: 0}
 --- !u!114 &11485216
 MonoBehaviour:
   m_ObjectHideFlags: 1

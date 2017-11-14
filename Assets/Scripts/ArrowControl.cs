@@ -10,7 +10,7 @@ using System.Collections;
 
 public class ArrowControl : MonoBehaviour
 {
-    public TossBall tossBall;
+    public BallControl ball;
 
     const float apex = 57.293f; // value of rotation at 0degrees. Lack of accuracy here is what causes the
                                 // arrow to stop slightly when it rotates straight ahead
@@ -20,8 +20,8 @@ public class ArrowControl : MonoBehaviour
     void Start()
     {
         int childCount = transform.parent.childCount;
-        tossBall = transform.parent.GetChild(childCount - 1).GetComponent<TossBall>();
-        tossBall.spaceKeyObserver += SpaceKeyHander_ArrowControl;
+        ball = transform.parent.GetChild(childCount - 1).GetComponent<BallControl>();
+        ball.spaceKeyObserver += SpaceKeyHander_ArrowControl;
     }
 
     //What this object should do when the space key is pressed

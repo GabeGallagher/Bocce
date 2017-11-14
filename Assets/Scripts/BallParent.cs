@@ -54,7 +54,7 @@ public class BallParent : MonoBehaviour
             ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
             //ballInstantiationReporter += BallInstantiationReporter;
             arrow = transform.GetChild(0).GetComponent<ArrowControl>();
-            arrow.tossBall = ball.GetComponent<TossBall>();
+            arrow.ball = ball.GetComponent<BallControl>();
             arrow.isRotating = true; 
         }
         else

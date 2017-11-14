@@ -10,6 +10,9 @@ using System.Collections;
 
 public class BallControl : MonoBehaviour
 {
+    public delegate void OnSpaceKey();
+    public OnSpaceKey spaceKeyObserver;
+
     public delegate void OnKillCommand();
     public OnKillCommand killCommandObserver;
 
@@ -35,6 +38,12 @@ public class BallControl : MonoBehaviour
 
     bool killCommandEnabled = false;
 
+    //What this object should do when the space key is pressed
+    void SpaceKeyHandler_BallControl()
+    {
+        //Debug.Log("Space Key Down");
+    }
+
     //What this object should do when a moviing ball comes to rest
     public void KillCommandHandler_BallControl()
     {
@@ -42,7 +51,7 @@ public class BallControl : MonoBehaviour
     }
 
     //Throw the ball
-    public void Toss(float force)
+    public virtual void Toss(float force)
     {
         rBody.isKinematic = false;
         isTossed = true;
@@ -58,6 +67,7 @@ public class BallControl : MonoBehaviour
     void Start ()
     {
         rBody = GetComponent<Rigidbody>();
+        spaceKeyObserver += SpaceKeyHandler_BallControl;
         killCommandObserver += KillCommandHandler_BallControl;
 
         isDead = false;
@@ -141,6 +151,11 @@ public class BallControl : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
+        if (Input.GetKey(KeyCode.Space))
+        {
+            spaceKeyObserver();
+        }
+
         if (!rBody.isKinematic)
         {
             float avgVel = GetAverageVelocity(rBody.velocity);

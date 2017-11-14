@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 public class PowerBarControl : MonoBehaviour
 {
-    public TossBall tossBall;
+    public BallControl ball;
 
     public float maxTimeInSeconds;
 
@@ -35,8 +35,8 @@ public class PowerBarControl : MonoBehaviour
     {
         Transform ballsParent = GameObject.Find("Balls").transform;
         int childCount = ballsParent.childCount;
-        tossBall = ballsParent.GetChild(childCount - 1).GetComponent<TossBall>();
-        tossBall.spaceKeyObserver += SpaceKeyHandler_PowerBarControl;
+        ball = ballsParent.GetChild(childCount - 1).GetComponent<BallControl>();
+        ball.spaceKeyObserver += SpaceKeyHandler_PowerBarControl;
         powerBar = gameObject.GetComponent<Slider>();
         powerBar.value = 0;
         instantiationTime = Time.timeSinceLevelLoad;
@@ -63,11 +63,11 @@ public class PowerBarControl : MonoBehaviour
         {
             if (powerTime >= maxTimeInSeconds)
             {
-                tossBall.gameObject.GetComponent<BallControl>().Toss(powerBar.maxValue);
+                ball.Toss(powerBar.maxValue);
             }
             else
             {
-                tossBall.gameObject.GetComponent<BallControl>().Toss(powerBar.value);
+                ball.Toss(powerBar.value);
             }
             Destroy(gameObject);
         }

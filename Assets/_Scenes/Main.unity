@@ -824,7 +824,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sliderPrefab: {fileID: 133064, guid: 8d83dab62fd029946aad8ce6a837c8e9, type: 2}
-  tossBall: {fileID: 0}
+  ball: {fileID: 0}
 --- !u!1001 &1496726400
 Prefab:
   m_ObjectHideFlags: 0
@@ -1087,6 +1087,30 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 0be3fb45549dcbc498e017e924bdcf65, type: 2}
   m_IsPrefabParent: 0
+--- !u!1 &1766132019 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 108626, guid: 2d0eda7a43ce53a45bcc22c390e46d9f, type: 2}
+  m_PrefabInternal: {fileID: 1496726400}
+--- !u!114 &1766132027
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1766132019}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21e887417f4cbf2498d67512d682f750, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  liftAdjustment: 0
+  stopThreshold: 0
+  delayTime: 0
+  isObjectInCollisionArea: 0
+  isOnFloor: 0
+  hitWarningWall: 0
+  velocity: {x: 0, y: 0, z: 0}
+  isTossed: 0
+  isDead: 0
 --- !u!1 &1884715601
 GameObject:
   m_ObjectHideFlags: 0

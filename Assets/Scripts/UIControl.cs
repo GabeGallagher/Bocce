@@ -13,7 +13,7 @@ public class UIControl : MonoBehaviour
 
     GameObject balls;
 
-    public TossBall tossBall;
+    public BallControl ball;
 
     void Start ()
     {
@@ -26,16 +26,16 @@ public class UIControl : MonoBehaviour
         else
         {
             int childCount = balls.transform.childCount;
-            if (!balls.transform.GetChild(childCount - 1).GetComponent<TossBall>())
+            if (!balls.transform.GetChild(childCount - 1).GetComponent<BallControl>())
             {
                 Debug.Log(name + " does not have the TossBall script attached to it");
             }
             else
             {
-                tossBall = balls.transform.GetChild(childCount - 1).GetComponent<TossBall>(); 
+                ball = balls.transform.GetChild(childCount - 1).GetComponent<BallControl>(); 
             }
         }
-        tossBall.spaceKeyObserver += SpaceKeyHander_UIControl;
+        ball.spaceKeyObserver += SpaceKeyHander_UIControl;
 	}
 
     //What this object should do when the space key is pressed
@@ -57,7 +57,7 @@ public class UIControl : MonoBehaviour
             //powerBar.transform.parent = transform;
             powerBar.transform.SetParent(transform, false);
             powerBar.transform.localPosition = sliderPrefab.transform.position;
-            powerBar.GetComponent<PowerBarControl>().tossBall = tossBall; //set the ball associated with
+            powerBar.GetComponent<PowerBarControl>().ball = ball; //set the ball associated with
                                                                           //the bar to the currently
                                                                           //selected ball
         }
@@ -65,10 +65,10 @@ public class UIControl : MonoBehaviour
 
     void Update ()
     {
-	    if (tossBall.gameObject.GetComponent<BallControl>().isDead)
+	    if (ball.gameObject.GetComponent<BallControl>().isDead)
         {
             int childCount = balls.transform.childCount;
-            tossBall = balls.transform.GetChild(childCount - 1).GetComponent<TossBall>();
+            ball = balls.transform.GetChild(childCount - 1).GetComponent<BallControl>();
         }
 	}
 }
