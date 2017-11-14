@@ -16,6 +16,10 @@ public class CameraControl : MonoBehaviour
 
     public float callTime;
 
+    BallParent ballParent;
+
+    Vector3 originalPosition;
+
     int childCount;
 
     bool isObservingKillCommand = true;
@@ -41,13 +45,41 @@ public class CameraControl : MonoBehaviour
         }
         isChanging = true;
     }
+
+    public void GetPallino()
+    {
+        childCount = ballParent.gameObject.transform.childCount;
+        for (int i = 0; i < childCount; ++i)
+        {
+            if (ballParent.gameObject.transform.GetChild(i).GetComponent<PallinoControl>())
+            {
+                ball = ballParent.gameObject.transform.GetChild(i).gameObject;
+            }
+        }
+        if (!ball)
+        {
+            Debug.Log("Error getting pallino in camera");
+        }
+    }
     
 	void Start ()
     {
-        childCount = GameObject.Find("Balls").transform.childCount;
-        ball = GetBallCamFocuses();
+        ballParent = (BallParent)FindObjectOfType(typeof(BallParent));
+        GetPallino();
+        originalPosition = transform.position;
         offset = transform.position - ball.transform.localPosition;
         ball.GetComponent<BallControl>().killCommandObserver += KillCommandObserver_CameraControl;
+        ballParent.newRoundReporter += BeginNewRoundObserver_CameraControl;
+    }
+
+    void BeginNewRoundObserver_CameraControl()
+    {
+        Debug.Log("Camera observing new round");
+        GetPallino();
+        transform.position = originalPosition;
+        offset = transform.position - ball.transform.localPosition;
+        ball.GetComponent<BallControl>().killCommandObserver += KillCommandObserver_CameraControl;
+        ballParent.newRoundReporter += BeginNewRoundObserver_CameraControl;
     }
 	
 	void Update ()

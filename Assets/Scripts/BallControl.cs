@@ -36,7 +36,7 @@ public class BallControl : MonoBehaviour
 
     public bool isDead;
 
-    bool killCommandEnabled = false;
+    public bool killCommandEnabled = false;
 
     //What this object should do when the space key is pressed
     void SpaceKeyHandler_BallControl()
@@ -53,6 +53,14 @@ public class BallControl : MonoBehaviour
     //Throw the ball
     public void Toss(float force)
     {
+        //Fixes a bug where the bocces would sometimes not decrement properly. this if statement ensures
+        //that once the pallino is tossed, the bocce counts will be 0, since the pallino is always tossed
+        //in an empty arena
+        if (gameObject.GetComponent<PallinoControl>())
+        {
+            transform.parent.GetComponent<BallParent>().greenBocceCount = 0;
+            transform.parent.GetComponent<BallParent>().redBocceCount = 0;
+        }
         rBody.isKinematic = false;
         isTossed = true;
         GameObject arrow = GameObject.Find("Arrow");

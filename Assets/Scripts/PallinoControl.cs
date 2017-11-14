@@ -1,17 +1,12 @@
-﻿using UnityEngine;
+﻿/* Author Gabriel B. Gallagher November 13, 2017
+ *
+ * Script allows the pallino to be distinguished from the other balls
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class PallinoControl : MonoBehaviour
 {
-    // Use this for initialization
-    void Start ()
-    {
-	
-	}
-	
-	// Update is called once per frame
-	void Update ()
-    {
-	
-	}
+    
 }

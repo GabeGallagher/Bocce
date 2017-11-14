@@ -12,6 +12,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/_Scenes/Help.unity
   - enabled: 1
-    path: Assets/_Scenes/Victory.unity
+    path: Assets/_Scenes/RedVictory.unity
   - enabled: 1
-    path: Assets/_Scenes/GameOver.unity
+    path: Assets/_Scenes/GreenVictory.unity

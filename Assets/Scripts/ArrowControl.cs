@@ -17,11 +17,20 @@ public class ArrowControl : MonoBehaviour
 
     public bool isRotating = true;
 
-    void Start()
+    void GetBall()
     {
-        int childCount = transform.parent.childCount;
-        ball = transform.parent.GetChild(childCount - 1).GetComponent<BallControl>();
-        ball.spaceKeyObserver += SpaceKeyHander_ArrowControl;
+        GameObject ballParent = transform.parent.gameObject;
+        for (int i = 0; i < ballParent.transform.childCount; ++i)
+        {
+            if (ballParent.transform.GetChild(i).GetComponent<PallinoControl>())
+            {
+                ball = ballParent.transform.GetChild(i).GetComponent<BallControl>();
+            }
+        }
+        if (!ball)
+        {
+            Debug.Log("Error finding pallino");
+        }
     }
 
     //What this object should do when the space key is pressed
@@ -31,6 +40,22 @@ public class ArrowControl : MonoBehaviour
         {
             isRotating = false;
         }
+    }
+
+    void Start()
+    {
+        GetBall();
+        ball.spaceKeyObserver += SpaceKeyHander_ArrowControl;
+        transform.parent.GetComponent<BallParent>().newRoundReporter += BeginNewRoundObserver_ArrowControl;
+    }
+    
+    void BeginNewRoundObserver_ArrowControl()
+    {
+        Debug.Log("Arrow observing new round");
+        GetBall();
+        isRotating = true;
+        ball.spaceKeyObserver += SpaceKeyHander_ArrowControl;
+        transform.parent.GetComponent<BallParent>().newRoundReporter += BeginNewRoundObserver_ArrowControl;
     }
 
     /* Gives the distance between the origin and the mouse world point. Since we already know the 
@@ -91,53 +116,7 @@ public class ArrowControl : MonoBehaviour
 
         transform.rotation = Quaternion.Euler(0, ConvertArrowRotation(expectedRotation, pointC), 0);
     }
-
-    //void OnGUI()
-    //{
-    //    Vector3 p = new Vector3();
-    //    Camera c = Camera.main;
-    //    Vector2 mousePos = new Vector2();
-
-    //    // Get the mouse position from Event.
-    //    // Note that the y position from Event is inverted.
-    //    mousePos.x = Input.mousePosition.x;
-    //    mousePos.y = Input.mousePosition.y;
-
-    //    p = c.ScreenToWorldPoint(new Vector3(mousePos.x, mousePos.y, c.farClipPlane));
-
-    //    GUILayout.BeginArea(new Rect(20, 300, 250, 120));
-    //    GUILayout.Label("Screen pixels: " + c.pixelWidth + ":" + c.pixelHeight);
-    //    GUILayout.Label("Mouse position: " + mousePos);
-    //    GUILayout.Label("World position: " + p.ToString("F3"));
-    //    GUILayout.EndArea();
-
-    //    float pointA = p.y + 640;   //the origin of the bocce after applying ScreenToWorldPoint algorithm 
-    //                                //is at about -640 world units on the y axis
-    //    float pointC = p.z;         //The origin of the bocce after applying ScreenToWorldPoint algorith
-    //                                //is conveniently at 0 world units on the z axis
-
-    //    GUILayout.BeginArea(new Rect(1600, 300, 250, 120));
-    //    if (pointA <= 0)
-    //    {
-    //        pointA = 0;
-    //    }
-    //    GUILayout.Label("length side a: " + pointA); //side on y axis
-    //    GUILayout.Label("length of side b: " + LawOfCosines(pointC, pointA)); //from origin to mouse point
-    //    GUILayout.Label("length side c: " + pointC); //side on z axis
-    //    float expectedRotation = (pointA / LawOfCosines(pointC, pointA)) * Mathf.Rad2Deg;
-    //    GUILayout.Label("Expected arrow rotation: " + expectedRotation);
-    //    GUILayout.Label("Actual rotation: " + ConvertArrowRotation(expectedRotation, pointC));
-    //    //Max apex is 57.293 with about +/- .0025 variation based on aspect ratio and size of window. 
-    //    //Biggest difference is at 4:3 aspect ratio
-    //    //if (expectedRotation > apex)
-    //    //{
-    //    //    apex = expectedRotation;
-    //    //}
-    //    //GUILayout.Label("Apex:" + apex);
-    //    GUILayout.EndArea();
-    //}
-
-    // Update is called once per frame
+    
     void Update ()
     {
         if (isRotating)

@@ -1,4 +1,10 @@
-﻿using UnityEngine;
+﻿/* Author Gabriel B. Gallagher November 12, 2017
+ *
+ * Script allows the Bocce to measure the distance between itself and the palino in order to score the
+ * game
+ */
+
+using UnityEngine;
 using System.Collections;
 
 public class BocceControl : MonoBehaviour

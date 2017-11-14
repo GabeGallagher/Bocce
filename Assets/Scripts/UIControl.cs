@@ -11,33 +11,41 @@ public class UIControl : MonoBehaviour
 {
     public GameObject sliderPrefab;
 
-    GameObject ballsParent;
+    public GameObject ballsParent;
 
     public BallControl ball;
 
-    public bool isDestroyed = false; //Checks to see if a ball was destroyed by the shredder
+    public bool isDestroyed = false, pallinoDestroyed = false; //Checks if a balls were shredded
+
+    void GetPallino()
+    {
+        int childCount = ballsParent.transform.childCount;
+        for (int i = 0; i < childCount; ++i)
+        {
+            if (ballsParent.transform.GetChild(i).GetComponent<PallinoControl>())
+            {
+                ball = ballsParent.transform.GetChild(i).GetComponent<BallControl>();
+            }
+        }
+        if (!ball)
+        {
+            Debug.Log("Error getting pallino in UI control");
+        }
+    }
+
+    void BeginNewRoundObserver_UIControl()
+    {
+        Debug.Log("UI observing new round");
+        GetPallino();
+        ball.spaceKeyObserver += SpaceKeyHander_UIControl;
+        ballsParent.GetComponent<BallParent>().newRoundReporter += BeginNewRoundObserver_UIControl;
+    }
 
     void Start ()
     {
-        ballsParent = GameObject.Find("Balls");
-
-        if (ballsParent.transform.childCount <= 0)
-        {
-            Debug.Log("There are no balls on the court");
-        }
-        else
-        {
-            int childCount = ballsParent.transform.childCount;
-            if (!ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>())
-            {
-                Debug.Log(name + " does not have the BallControl script attached to it");
-            }
-            else
-            {
-                ball = ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>(); 
-            }
-        }
+        GetPallino();
         ball.spaceKeyObserver += SpaceKeyHander_UIControl;
+        ballsParent.GetComponent<BallParent>().newRoundReporter += BeginNewRoundObserver_UIControl;
 	}
 
     //What this object should do when the space key is pressed
@@ -67,17 +75,36 @@ public class UIControl : MonoBehaviour
 
     void Update ()
     {
-	    if (ball.gameObject.GetComponent<BallControl>().isDead)
-        {
-            int childCount = ballsParent.transform.childCount;
-            ball = ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>();
-        }
-
         if (isDestroyed)
         {
-            int childCount = ballsParent.transform.childCount;
-            ball = ballsParent.transform.GetChild(childCount - 1).GetComponent<BallControl>();
+            GetBall();
             isDestroyed = false;
         }
-	}
+
+        if (pallinoDestroyed)
+        {
+            GetPallino();
+            pallinoDestroyed = false;
+        }
+
+        if (ball.gameObject.GetComponent<BallControl>().isDead)
+        {
+            GetBall();
+        }
+    }
+
+    void GetBall()
+    {
+        for (int i = 0; i < ballsParent.transform.childCount; ++i)
+        {
+            if (ballsParent.transform.GetChild(i).GetComponent<BallControl>())
+            {
+                ball = ballsParent.transform.GetChild(i).GetComponent<BallControl>();
+            }
+        }
+        if (!ball)
+        {
+            Debug.Log("Error getting ball in UI Control");
+        }
+    }
 }

@@ -14,20 +14,17 @@ using System.Collections.Generic;
 
 public class BallParent : MonoBehaviour
 {
-    public delegate void OnBallInstantiation();
-    public OnBallInstantiation ballInstantiationReporter;
+    public delegate void OnBeginNewRound();
+    public OnBeginNewRound newRoundReporter;
 
-    public GameObject boccePrefabGreen, boccePrefabRed;
-
-    public List<GameObject> bocceList = new List<GameObject>();
-    public List<float> distanceList = new List<float>();
+    public GameObject pallinoPrefab, boccePrefabGreen, boccePrefabRed, greenScoreReporter, redScoreReporter;
 
     public bool isGreenTurn; //Just determines if it's Green's turn. Could evaluate for red, doesn't matter
                              //as long as the evaluation is consistent.
 
-    public float sphereRadius;
+    public float sphereRadius; //check area with radius of this size if an object has already been created
 
-    public int redBocceCount, greenBocceCount, scoreReportCount;
+    public int redBocceCount, greenBocceCount, scoreReportCount, winningScore;
 
     public bool notInstantiationFailed = true;
 
@@ -37,26 +34,41 @@ public class BallParent : MonoBehaviour
 
     public int greenTeamScore, redTeamScore;
 
-    //currently not in use
-    void BallInstantiationReporter()
+    //What to do when a new round begins
+    void BeginNewRoundReporter()
     {
-        Debug.Log("New ball instantiated");
+        Debug.Log("Reporting new round");
+        GetPallino();
+        greenTeamScore = 0;
+        redTeamScore = 0;
+        ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
     }
 
-    void BeginNewRound()
+    void BeginNewRound(int greenScore, int redScore)
     {
-        Debug.Log("Begin new round");
+        newRoundReporter += BeginNewRoundReporter;
         //update UI to add scores
+        greenScoreReporter.GetComponent<ScoreReporter>().UpdateScore(greenScore);
+        redScoreReporter.GetComponent<ScoreReporter>().UpdateScore(redScore);
 
         //delete all Bocces in arena
-
-        //reset pallino's position to the origin
+        for (int i = 0; i < transform.childCount; ++i)
+        {
+            if (transform.GetChild(i).GetComponent<BallControl>())
+            {
+                Destroy(transform.GetChild(i).gameObject);
+            }
+        }
+        GameObject pallino = Instantiate(pallinoPrefab, transform.position, Quaternion.identity)
+            as GameObject;
+        pallino.transform.parent = transform;
+        newRoundReporter();
     }
 
     void GetScore()
     {
-        //List<GameObject> bocceList = new List<GameObject>();
-        //List<float> distanceList = new List<float>();
+        List<GameObject> bocceList = new List<GameObject>();
+        List<float> distanceList = new List<float>();
 
         //go through each bocce in this game object's transform
         for (int i = 0; i < transform.childCount; ++i)
@@ -109,9 +121,9 @@ public class BallParent : MonoBehaviour
                     {
                         ++greenTeamScore;
                         ++redTeamScore;
-                        BeginNewRound();
+                        BeginNewRound(greenTeamScore, redTeamScore);
                     }
-                    BeginNewRound();
+                    BeginNewRound(greenTeamScore, redTeamScore);
                 }
             }
         }
@@ -136,9 +148,9 @@ public class BallParent : MonoBehaviour
                         //point and restart the round
                         ++greenTeamScore;
                         ++redTeamScore;
-                        BeginNewRound();
+                        BeginNewRound(greenTeamScore, redTeamScore);
                     }
-                    BeginNewRound();
+                    BeginNewRound(greenTeamScore, redTeamScore);
                 }
             }
         }
@@ -150,17 +162,10 @@ public class BallParent : MonoBehaviour
 
     void KillCommandHandler_BallParent()
     {
+        Debug.Log("Kill Command on: " + name);
         if (greenBocceCount < scoreReportCount && redBocceCount < scoreReportCount)
         {
-            if (!Physics.CheckSphere(transform.position, sphereRadius) && notInstantiationFailed)
-            {
-                InstantiateNewBocce();
-            }
-            else
-            {
-                Debug.Log("Tried to instantiate a new ball, but there is already something at the origin");
-                notInstantiationFailed = false;
-            } 
+            InstantiateNewBocce();
         }
         else
         {
@@ -171,6 +176,7 @@ public class BallParent : MonoBehaviour
 
     public void InstantiateNewBocce()
     {
+        Debug.Log("Instantiating new Bocce");
         if (!isGreenTurn)
         {
             ball = Instantiate(boccePrefabGreen, transform.position, Quaternion.identity)
@@ -192,9 +198,24 @@ public class BallParent : MonoBehaviour
         arrow.isRotating = true;
     }
 
+    void GetPallino()
+    {
+        for (int i = 0; i < transform.childCount; ++i)
+        {
+            if (transform.GetChild(i).GetComponent<PallinoControl>())
+            {
+                ball = transform.GetChild(i).gameObject;
+            }
+        }
+        if (!ball)
+        {
+            Debug.Log("Error getting ball");
+        }
+    }
+
     void Start ()
     {
-        ball = transform.GetChild(transform.childCount - 1).gameObject;
+        GetPallino();
         ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
-	}
+    }
 }
