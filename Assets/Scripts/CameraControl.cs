@@ -12,45 +12,63 @@ public class CameraControl : MonoBehaviour
 
     public float changeTime; //Time between when a ball is killed and the camera switches to a new ball
 
-    Vector3 offset;
+    Vector3 offset; //Designer can adjust this value by moving the camera in editor
 
     float callTime;
 
+    int childCount;
+
+    bool isObservingKillCommand = true;
+
     bool isChanging = false;
 
+    //Returns which ball the camera should follow
     GameObject GetBallCamFocuses()
     {
-        int childCount = GameObject.Find("Balls").transform.childCount;
-        isChanging = false;
-        return GameObject.Find("Balls").transform.GetChild(childCount - 1).gameObject;
+        Debug.Log("Changing focus");
+        childCount = GameObject.Find("Balls").transform.childCount;
+        GameObject updatedBall = GameObject.Find("Balls").transform.GetChild(childCount - 1).gameObject;
+        Debug.Log("Updated Ball name: " + updatedBall.name);
+        updatedBall.GetComponent<BallControl>().killCommandObserver += KillCommandObserver_CameraControl;
+        return updatedBall;
     }
 
+    //what this script should do when a moving ball comes to rest
     void KillCommandObserver_CameraControl()
     {
-        callTime = Time.timeSinceLevelLoad;
+        Debug.Log("Camera read kill command");
+        if (isObservingKillCommand)
+        {
+            callTime = Time.timeSinceLevelLoad;
+            isObservingKillCommand = false;
+        }
+        Debug.Log("Call Time: " + callTime);
         isChanging = true;
-        Debug.Log("Camera reading the kill command");
     }
-
-	// Use this for initialization
+    
 	void Start ()
     {
+        childCount = GameObject.Find("Balls").transform.childCount;
+        Debug.Log("Number of children: " + childCount);
         ball = GetBallCamFocuses();
         offset = transform.position - ball.transform.localPosition;
         ball.GetComponent<BallControl>().killCommandObserver += KillCommandObserver_CameraControl;
-	}
+    }
 	
-	// Update is called once per frame
 	void Update ()
     {
+        int newChildCount = GameObject.Find("Balls").transform.childCount;
         if (transform.position.y >= vanishingPlane.transform.position.y)
         {
             transform.position = ball.transform.localPosition + offset; 
         }
 
-        if (((Time.timeSinceLevelLoad - callTime) >= changeTime) && isChanging)
+        if (isChanging && Time.timeSinceLevelLoad - callTime > changeTime)
         {
+            Debug.Log("Changing focus");
             ball = GetBallCamFocuses();
+            isObservingKillCommand = true;
+            isChanging = false;
         }
 	}
 }

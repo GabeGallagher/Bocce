@@ -19,11 +19,16 @@ public class PowerBarControl : MonoBehaviour
 
     float instantiationTime, powerTime;
 
+    //What this object should do when the space key is pressed
     void SpaceKeyHandler_PowerBarControl()
     {
-        Debug.Log("Power bar script reads space key down");
         powerBar.value = CalculatePower();
     }
+
+    //void BallInstantiationHandler_PowerBarControl()
+    //{
+    //    Debug.Log("Power Ball Control")
+    //}
 
     // Use this for initialization
     void Start ()
@@ -56,8 +61,6 @@ public class PowerBarControl : MonoBehaviour
     {
         if (Input.GetKeyUp(KeyCode.Space))
         {
-            Debug.Log("Tossing " + tossBall.gameObject.name);
-
             if (powerTime >= maxTimeInSeconds)
             {
                 tossBall.gameObject.GetComponent<BallControl>().Toss(powerBar.maxValue);

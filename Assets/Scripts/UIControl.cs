@@ -13,9 +13,9 @@ public class UIControl : MonoBehaviour
 
     GameObject balls;
 
-    TossBall tossBall;
-	
-	void Start ()
+    public TossBall tossBall;
+
+    void Start ()
     {
         balls = GameObject.Find("Balls");
 
@@ -38,9 +38,9 @@ public class UIControl : MonoBehaviour
         tossBall.spaceKeyObserver += SpaceKeyHander_UIControl;
 	}
 
+    //What this object should do when the space key is pressed
     void SpaceKeyHander_UIControl()
     {
-        Debug.Log("UI Control script reads space key down");
         int count = 0;
         for (int i = 0; i < transform.childCount; ++i)
         {
@@ -54,7 +54,8 @@ public class UIControl : MonoBehaviour
         {
             GameObject powerBar = Instantiate(sliderPrefab, transform.position, Quaternion.identity)
                 as GameObject;
-            powerBar.transform.parent = transform;
+            //powerBar.transform.parent = transform;
+            powerBar.transform.SetParent(transform, false);
             powerBar.transform.localPosition = sliderPrefab.transform.position;
             powerBar.GetComponent<PowerBarControl>().tossBall = tossBall; //set the ball associated with
                                                                           //the bar to the currently
@@ -64,6 +65,10 @@ public class UIControl : MonoBehaviour
 
     void Update ()
     {
-	
+	    if (tossBall.gameObject.GetComponent<BallControl>().isDead)
+        {
+            int childCount = balls.transform.childCount;
+            tossBall = balls.transform.GetChild(childCount - 1).GetComponent<TossBall>();
+        }
 	}
 }

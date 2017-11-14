@@ -12,16 +12,23 @@ public class CollisionSphere : MonoBehaviour
 {
     void OnTriggerEnter(Collider trigger)
     {
-        if (trigger.tag != "Wall")
+        if (trigger.GetComponent<BallControl>())
         {
             Debug.Log(trigger.name + " entered " + transform.parent.name + "'s collision sphere");
-            transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = true;
+            if (trigger.GetComponent<Rigidbody>().velocity == Vector3.zero)
+            {
+                transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = false;
+            }
+            else
+	        {
+                transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = true; 
+            }
         }
     }
 
     private void OnTriggerExit(Collider trigger)
     {
-        if (trigger.tag != "Wall")
+        if (trigger.GetComponent<BallControl>())
         {
             Debug.Log(trigger.name + " left " + transform.parent.name + "'s collision sphere");
             transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = false;

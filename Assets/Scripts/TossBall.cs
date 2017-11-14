@@ -14,9 +14,10 @@ public class TossBall : MonoBehaviour
 
     public GameObject ball;
 
+    //What this object should do when the space key is pressed
     void SpaceKeyHandler_TossBall()
     {
-        Debug.Log("Space Key Down");
+        //Debug.Log("Space Key Down");
     }
 
     // Use this for initialization
@@ -28,7 +29,7 @@ public class TossBall : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKey(KeyCode.Space) /*&& !ball.GetComponent<BallControl>().isTossed*/)
         {
             spaceKeyObserver();
         }

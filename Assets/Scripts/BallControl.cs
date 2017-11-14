@@ -29,23 +29,28 @@ public class BallControl : MonoBehaviour
 
     SphereCollider collisionSphere;
 
-    bool isTossed = false; // implemented to ensure that the kill command is only called once from this object
+    public bool isTossed = false; //ensures that the kill command is only called once from this object
 
+    public bool isDead;
+
+    bool killCommandEnabled = false;
+
+    //What this object should do when a moviing ball comes to rest
     public void KillCommandHandler_BallControl()
     {
         Debug.Log(name + " is dead");
-        isTossed = true;
     }
 
+    //Throw the ball
     public void Toss(float force)
     {
         rBody.isKinematic = false;
+        isTossed = true;
         GameObject arrow = GameObject.Find("Arrow");
         if (!arrow)
         {
             Debug.Log("No arrow found");
         }
-        Debug.Log("Toss force: " + force);
         transform.rotation = arrow.transform.rotation;
         rBody.AddRelativeForce(new Vector3(1.0f, liftAdjustment, 0.0f) * force, ForceMode.Impulse);
     }
@@ -54,6 +59,8 @@ public class BallControl : MonoBehaviour
     {
         rBody = GetComponent<Rigidbody>();
         killCommandObserver += KillCommandHandler_BallControl;
+
+        isDead = false;
 
         if (!collisionSphere)
         {
@@ -85,13 +92,16 @@ public class BallControl : MonoBehaviour
         return absoluteVelocity;
     }
 
+    //Bring the moving ball to rest
     void Kill()
     {
         rBody.isKinematic = true;
+        isDead = true;
 
-        if (rBody.isKinematic && !isTossed)
+        if (rBody.isKinematic && !killCommandEnabled)
         {
             killCommandObserver();
+            killCommandEnabled = true;
         }
         else
         {
@@ -103,7 +113,6 @@ public class BallControl : MonoBehaviour
     {
         if (collision.gameObject.name == "Floor")
         {
-            Debug.Log(name + " is on the floor");
             isOnFloor = true;
         }
 
@@ -146,10 +155,15 @@ public class BallControl : MonoBehaviour
         {
             float avgVel = GetAverageVelocity(rBody.velocity);
 
-            if (rBody.velocity == Vector3.zero && isObjectInCollisionArea)
+            if (rBody.velocity == Vector3.zero && isObjectInCollisionArea && isTossed)
             {
                 rBody.isKinematic = false;
             }
+        }
+
+        if (rBody.velocity == Vector3.zero)
+        {
+            isObjectInCollisionArea = false;
         }
 	}
 }
