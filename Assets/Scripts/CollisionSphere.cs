@@ -14,7 +14,6 @@ public class CollisionSphere : MonoBehaviour
     {
         if (trigger.GetComponent<BallControl>())
         {
-            Debug.Log(trigger.name + " entered " + transform.parent.name + "'s collision sphere");
             if (trigger.GetComponent<Rigidbody>().velocity == Vector3.zero)
             {
                 transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = false;
@@ -30,7 +29,6 @@ public class CollisionSphere : MonoBehaviour
     {
         if (trigger.GetComponent<BallControl>())
         {
-            Debug.Log(trigger.name + " left " + transform.parent.name + "'s collision sphere");
             transform.parent.gameObject.GetComponent<BallControl>().isObjectInCollisionArea = false;
         }
     }

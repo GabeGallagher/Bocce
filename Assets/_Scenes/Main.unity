@@ -301,6 +301,7 @@ MonoBehaviour:
   sphereRadius: .25
   redBocceCount: 0
   greenBocceCount: 0
+  scoreReportCount: 1
   notInstantiationFailed: 1
 --- !u!4 &445834590 stripped
 Transform:

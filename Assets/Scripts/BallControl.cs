@@ -47,7 +47,7 @@ public class BallControl : MonoBehaviour
     //What this object should do when a moviing ball comes to rest
     public void KillCommandHandler_BallControl()
     {
-        Debug.Log(name + " is dead");
+        //Debug.Log(name + " is dead");
     }
 
     //Throw the ball
