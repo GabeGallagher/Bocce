@@ -26,33 +26,7 @@ public class Shredder : MonoBehaviour
     {
         Debug.Log("Triggered by: " + trigger.name);
 
-        if (trigger.GetComponent<PallinoControl>())
-        {
-            Destroy(trigger.gameObject); //Shred palino
-            GameObject pallino = Instantiate(ballsParent.GetComponent<BallParent>().pallinoPrefab,
-                ballsParent.transform.position, Quaternion.identity) as GameObject;
-            pallino.transform.parent = ballsParent.transform;
-
-            //Update camera for new pallino
-            mainCamera.GetComponent<CameraControl>().ball = pallino;
-            mainCamera.transform.position = pallino.transform.position +
-                mainCamera.GetComponent<CameraControl>().offset;
-
-            //Update the ball in the UIControl
-            uI.GetComponent<UIControl>().isDestroyed = true;
-
-            //Update Arrow to take new pallino
-            for (int i = 0; i < ballsParent.transform.childCount; ++i)
-            {
-                if (ballsParent.transform.GetChild(i).GetComponent<ArrowControl>())
-                {
-                    ballsParent.transform.GetChild(i).GetComponent<ArrowControl>().ball = 
-                        pallino.GetComponent<BallControl>();
-                    ballsParent.transform.GetChild(i).GetComponent<ArrowControl>().isRotating = true;
-                }
-            }
-        }
-        else if (trigger.GetComponent<BocceControl>() && !trigger.GetComponent<PallinoControl>())
+        if (trigger.GetComponent<BocceControl>() && !trigger.GetComponent<PallinoControl>())
         {
             if (trigger.GetComponent<BocceControl>().isGreen)
             {

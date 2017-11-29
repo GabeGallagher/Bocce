@@ -5,15 +5,15 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 425784}
-  - 33: {fileID: 3359676}
-  - 135: {fileID: 13562610}
-  - 23: {fileID: 2317514}
-  - 54: {fileID: 5482316}
-  - 114: {fileID: 11449364}
-  - 114: {fileID: 11449062}
+  - component: {fileID: 425784}
+  - component: {fileID: 3359676}
+  - component: {fileID: 13562610}
+  - component: {fileID: 2317514}
+  - component: {fileID: 5482316}
+  - component: {fileID: 11449364}
+  - component: {fileID: 11449062}
   m_Layer: 0
   m_Name: BocceRed
   m_TagString: Ball
@@ -26,11 +26,11 @@ GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 4
+  serializedVersion: 5
   m_Component:
-  - 4: {fileID: 428738}
-  - 135: {fileID: 13540636}
-  - 114: {fileID: 11474314}
+  - component: {fileID: 428738}
+  - component: {fileID: 13540636}
+  - component: {fileID: 11474314}
   m_Layer: 0
   m_Name: CollisionSphere
   m_TagString: Untagged
@@ -46,11 +46,12 @@ Transform:
   m_GameObject: {fileID: 108948}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .349999994, y: .349999994, z: .349999994}
+  m_LocalScale: {x: 0.35, y: 0.35, z: 0.35}
   m_Children:
   - {fileID: 428738}
   m_Father: {fileID: 0}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &428738
 Transform:
   m_ObjectHideFlags: 1
@@ -59,10 +60,11 @@ Transform:
   m_GameObject: {fileID: 142048}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.85714293, y: 2.85714293, z: 2.85714293}
+  m_LocalScale: {x: 2.857143, y: 2.857143, z: 2.857143}
   m_Children: []
   m_Father: {fileID: 425784}
   m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &2317514
 MeshRenderer:
   m_ObjectHideFlags: 1
@@ -72,20 +74,28 @@ MeshRenderer:
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
   m_Materials:
   - {fileID: 2100000, guid: 3cd78cab3af22fa4e974165f874241d8, type: 2}
-  m_SubsetIndices: 
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
   m_StaticBatchRoot: {fileID: 0}
-  m_UseLightProbes: 1
-  m_ReflectionProbeUsage: 1
   m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
   m_ScaleInLightmap: 1
   m_PreserveUVs: 1
+  m_IgnoreNormalsForChartDetection: 0
   m_ImportantGI: 0
-  m_AutoUVMaxDistance: .5
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
+  m_SortingLayer: 0
   m_SortingOrder: 0
 --- !u!33 &3359676
 MeshFilter:
@@ -101,9 +111,9 @@ Rigidbody:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108948}
   serializedVersion: 2
-  m_Mass: 2.02824998
+  m_Mass: 2.02825
   m_Drag: 0
-  m_AngularDrag: .0500000007
+  m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 1
   m_Interpolate: 0
@@ -120,6 +130,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5c0ed37361005584aa79dfc619474a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pallino: {fileID: 0}
+  layerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  distance: 0
+  isGreen: 0
 --- !u!114 &11449364
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -131,15 +147,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de78986931735964da55ac3b1fa495f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  liftAdjustment: .125
-  stopThreshold: .400000006
+  liftAdjustment: 0.125
+  stopThreshold: 0.45
   delayTime: 2
   isObjectInCollisionArea: 0
   isOnFloor: 0
+  isCounted: 0
   hitWarningWall: 0
   velocity: {x: 0, y: 0, z: 0}
   isTossed: 0
   isDead: 0
+  killCommandEnabled: 0
 --- !u!114 &11474314
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -173,7 +191,7 @@ SphereCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: .5
+  m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &100100000
 Prefab:

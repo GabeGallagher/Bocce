@@ -1,7 +1,7 @@
 ﻿/* Author Gabriel B. Gallagher November 14, 2017
  *
- * Script takes the score from the BallParent scoring method and displays it in the UI. If score is over
- * a certain threshold, this script loads the win page
+ * Script is attached to a score reporter on the canvas and takes the score from the BallParent scoring 
+ * method and displays it in the UI. If score is over a certain threshold, this script loads the win page
  */
 
 using UnityEngine;
@@ -14,7 +14,7 @@ public class ScoreReporter : MonoBehaviour
 
     public LevelManager levelManager;
 
-    public int score;
+    public int score, winningScore;
 
     public bool isGreen;
 
@@ -25,7 +25,7 @@ public class ScoreReporter : MonoBehaviour
         text = GetComponent<Text>();
         score = 0;
         text.text = score.ToString();
-	}
+    }
 
     public void UpdateScore(int newScore)
     {

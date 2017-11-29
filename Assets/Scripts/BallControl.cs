@@ -192,9 +192,11 @@ public class BallControl : MonoBehaviour
             }
         }
 
-        if (rBody.velocity == Vector3.zero)
+        //Fix bug where Bocces would sometimes get stuck at the origin
+        if (Mathf.Approximately(transform.position.x, 0.0f) && rBody.velocity == Vector3.zero)
         {
-            isObjectInCollisionArea = false;
+            rBody.isKinematic = false;
+            rBody.AddRelativeForce(new Vector3(-1.0f, 0.0f, 0.0f), ForceMode.Impulse);
         }
 	}
 }

@@ -22,11 +22,7 @@ public class BallParent : MonoBehaviour
     public bool isGreenTurn; //Just determines if it's Green's turn. Could evaluate for red, doesn't matter
                              //as long as the evaluation is consistent.
 
-    public float sphereRadius; //check area with radius of this size if an object has already been created
-
     public int redBocceCount, greenBocceCount, scoreReportCount, winningScore;
-
-    public bool notInstantiationFailed = true;
 
     ArrowControl arrow;
 
