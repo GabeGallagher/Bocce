@@ -13,13 +13,7 @@ public class BocceControl : MonoBehaviour
 
     public LayerMask layerMask;
 
-    public float distance; //for visualizing distance in inspector. Remove in final build
-
     public bool isGreen; //if false, is Red
-
-    Ray ray;
-
-    RaycastHit hit;
 	
 	void Start ()
     {
@@ -52,25 +46,21 @@ public class BocceControl : MonoBehaviour
 
     public float GetDistance()
     {
-        //GetPallino();
+        Ray ray;
+
+        RaycastHit hit;
+
         Vector3 rayDirection = GetRayDirection();
+
         ray = new Ray(transform.position, rayDirection);
-        Debug.DrawRay(transform.position, rayDirection, Color.green);
         if (Physics.Raycast(ray, out hit, layerMask))
         {
-            Debug.Log(name + "hit: " + hit.collider);
-            distance = hit.distance;
-            return distance;
+            return hit.distance;
         }
         else
         {
             Debug.Log("Error reporting " + name + " distance");
             return 1000.0f;
         }
-    }
-
-    void Update()
-    {
-        GetDistance();
     }
 }

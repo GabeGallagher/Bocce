@@ -23,7 +23,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 152316}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -42, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4920412569298788}
@@ -109,7 +109,7 @@ GameObject:
   - component: {fileID: 114777080219443592}
   m_Layer: 0
   m_Name: Arrow
-  m_TagString: Untagged
+  m_TagString: Arrow
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -291,6 +291,7 @@ MonoBehaviour:
   isOnFloor: 0
   isCounted: 0
   hitWarningWall: 0
+  isOnArrow: 0
   velocity: {x: 0, y: 0, z: 0}
   isTossed: 0
   isDead: 0
@@ -325,8 +326,8 @@ MonoBehaviour:
   isGreenTurn: 1
   redBocceCount: 0
   greenBocceCount: 0
-  scoreReportCount: 4
-  winningScore: 7
+  tossesPerRound: 2
+  winningScore: 3
   greenTeamScore: 0
   redTeamScore: 0
 --- !u!114 &114777080219443592

@@ -17,7 +17,8 @@ public class BallParent : MonoBehaviour
     public delegate void OnBeginNewRound();
     public OnBeginNewRound newRoundReporter;
 
-    public GameObject pallinoPrefab, boccePrefabGreen, boccePrefabRed, greenScoreReporter, redScoreReporter;
+    public GameObject pallinoPrefab, boccePrefabGreen, boccePrefabRed, greenScoreReporter,
+                      redScoreReporter, collisionTesterObjPrefab;
 
     public bool isGreenTurn; //Just determines if it's Green's turn. Could evaluate for red, doesn't matter
                              //as long as the evaluation is consistent.
@@ -28,7 +29,11 @@ public class BallParent : MonoBehaviour
 
     GameObject ball;
 
+    float callTime;
+
     public int greenTeamScore, redTeamScore;
+
+    public bool isReadingKillCommand;
 
     //What to do when a new round begins
     void BeginNewRoundReporter()
@@ -85,8 +90,8 @@ public class BallParent : MonoBehaviour
             {
                 BocceControl bocce = transform.GetChild(i).GetComponent<BocceControl>();
                 //get the distances and build distance list
-                bocce.distance = bocce.GetDistance();
-                distanceList.Add(bocce.distance);
+                //bocce.distance = bocce.GetDistance();
+                distanceList.Add(bocce.GetDistance());
             }
         }
 
@@ -98,7 +103,7 @@ public class BallParent : MonoBehaviour
             for (int j = 0; j < transform.childCount; ++j)
             {
                 if (transform.GetChild(j).GetComponent<BocceControl>() &&
-                    Mathf.Approximately(transform.GetChild(j).GetComponent<BocceControl>().distance,
+                    Mathf.Approximately(transform.GetChild(j).GetComponent<BocceControl>().GetDistance(),
                     distanceList[i]))
                 {
                     bocceList.Add(transform.GetChild(j).gameObject);
@@ -124,8 +129,8 @@ public class BallParent : MonoBehaviour
                     //TODO fix possible bugs occuring here when bocces are equidistant from pallino
                     //if two balls of opposite colors are equidistant from the pallino, give both teams a
                     //point and restart the round
-                    if (Mathf.Approximately(bocceList[i].GetComponent<BocceControl>().distance,
-                        bocceList[0].GetComponent<BocceControl>().distance))
+                    if (Mathf.Approximately(bocceList[i].GetComponent<BocceControl>().GetDistance(),
+                        bocceList[0].GetComponent<BocceControl>().GetDistance()))
                     {
                         ++greenTeamScore;
                         ++redTeamScore;
@@ -153,8 +158,8 @@ public class BallParent : MonoBehaviour
                 else
                 {
                     //TODO fix possible bugs occuring here when bocces are equidistant from pallino
-                    if (Mathf.Approximately(bocceList[i].GetComponent<BocceControl>().distance,
-                        bocceList[0].GetComponent<BocceControl>().distance))
+                    if (Mathf.Approximately(bocceList[i].GetComponent<BocceControl>().GetDistance(),
+                        bocceList[0].GetComponent<BocceControl>().GetDistance()))
                     {
                         //if two balls of opposite colors are equidistant from the pallino, give both teams a
                         //point and restart the round
@@ -177,40 +182,70 @@ public class BallParent : MonoBehaviour
 
     void KillCommandHandler_BallParent()
     {
-        Debug.Log("Kill Command on: " + name);
-        if (greenBocceCount < tossesPerRound && redBocceCount < tossesPerRound)
+        if (isReadingKillCommand)
         {
-            InstantiateNewBocce();
+            Debug.Log("Kill Command on: " + name);
+            isReadingKillCommand = false;
+            callTime = Time.timeSinceLevelLoad;
+
+            if (greenBocceCount < tossesPerRound && redBocceCount < tossesPerRound)
+            {
+                InstantiateNewBocce();
+            }
+            else
+            {
+                Debug.Log("Moving to scoring");
+                GetScore();
+            } 
         }
-        else
+    }
+
+    bool CheckForObjectAtOrigin()
+    {
+        for (int i = 0; i < transform.childCount; ++i)
         {
-            Debug.Log("Moving to scoring");
-            GetScore();
+            if(transform.GetChild(i).gameObject.tag == "Ball" 
+                && transform.GetChild(i).transform.position == Vector3.zero)
+            {
+                return true;
+            }
         }
+        return false;
     }
 
     public void InstantiateNewBocce()
     {
-        Debug.Log("Instantiating new Bocce");
-        if (!isGreenTurn)
+        bool isBallAtOrigin = CheckForObjectAtOrigin();
+
+        Debug.Log("Is ball at origin: " + isBallAtOrigin);
+
+        if (!isBallAtOrigin)
         {
-            ball = Instantiate(boccePrefabGreen, transform.position, Quaternion.identity)
-                as GameObject;
-            ball.GetComponent<BocceControl>().isGreen = true;
-            isGreenTurn = true;
+            Debug.Log("Instantiating new Bocce");
+            if (!isGreenTurn)
+            {
+                ball = Instantiate(boccePrefabGreen, transform.position, Quaternion.identity)
+                    as GameObject;
+                ball.GetComponent<BocceControl>().isGreen = true;
+                isGreenTurn = true;
+            }
+            else
+            {
+                ball = Instantiate(boccePrefabRed, transform.position, Quaternion.identity)
+                    as GameObject;
+                ball.GetComponent<BocceControl>().isGreen = false;
+                isGreenTurn = false;
+            }
+            ball.transform.parent = transform;
+            ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
+            arrow = transform.GetChild(0).GetComponent<ArrowControl>();
+            arrow.ball = ball;
+            arrow.isRotating = true; 
         }
         else
         {
-            ball = Instantiate(boccePrefabRed, transform.position, Quaternion.identity)
-                as GameObject;
-            ball.GetComponent<BocceControl>().isGreen = false;
-            isGreenTurn = false;
+            Debug.Log("There's already a ball at the origin");
         }
-        ball.transform.parent = transform;
-        ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
-        arrow = transform.GetChild(0).GetComponent<ArrowControl>();
-        arrow.ball = ball.GetComponent<BallControl>();
-        arrow.isRotating = true;
     }
 
     void GetPallino()
@@ -232,5 +267,17 @@ public class BallParent : MonoBehaviour
     {
         GetPallino();
         ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
+        isReadingKillCommand = true;
+    }
+
+    void Update()
+    {
+        if(!isReadingKillCommand)
+        {
+            if(Time.timeSinceLevelLoad - callTime >= 1.0f)
+            {
+                isReadingKillCommand = true;
+            }
+        }
     }
 }

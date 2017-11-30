@@ -10,7 +10,7 @@ using System.Collections;
 
 public class ArrowControl : MonoBehaviour
 {
-    public BallControl ball;
+    public GameObject ball;
 
     const float apex = 57.293f; // value of rotation at 0degrees. Lack of accuracy here is what causes the
                                 // arrow to stop slightly when it rotates straight ahead
@@ -24,7 +24,7 @@ public class ArrowControl : MonoBehaviour
         {
             if (ballParent.transform.GetChild(i).GetComponent<PallinoControl>())
             {
-                ball = ballParent.transform.GetChild(i).GetComponent<BallControl>();
+                ball = ballParent.transform.GetChild(i).gameObject;
             }
         }
         if (!ball)
@@ -45,7 +45,7 @@ public class ArrowControl : MonoBehaviour
     void Start()
     {
         GetBall();
-        ball.spaceKeyObserver += SpaceKeyHander_ArrowControl;
+        ball.GetComponent<BallControl>().spaceKeyObserver += SpaceKeyHander_ArrowControl;
         transform.parent.GetComponent<BallParent>().newRoundReporter += BeginNewRoundObserver_ArrowControl;
     }
     
@@ -54,7 +54,7 @@ public class ArrowControl : MonoBehaviour
         Debug.Log("Arrow observing new round");
         GetBall();
         isRotating = true;
-        ball.spaceKeyObserver += SpaceKeyHander_ArrowControl;
+        ball.GetComponent<BallControl>().spaceKeyObserver += SpaceKeyHander_ArrowControl;
         transform.parent.GetComponent<BallParent>().newRoundReporter += BeginNewRoundObserver_ArrowControl;
     }
 

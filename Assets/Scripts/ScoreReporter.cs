@@ -25,29 +25,11 @@ public class ScoreReporter : MonoBehaviour
         text = GetComponent<Text>();
         score = 0;
         text.text = score.ToString();
-
-        if (isGreen)
-        {
-            Debug.Log("Green Score: " + score);
-        }
-        else
-        {
-            Debug.Log("Red Score: " + score);
-        }
     }
 
     public void UpdateScore(int newScore)
     {
         score += newScore;
-
-        if(isGreen)
-        {
-            Debug.Log("Green Score: " + score);
-        }
-        else
-        {
-            Debug.Log("Red Score: " + score);
-        }
 
         if (score >= ballsParent.GetComponent<BallParent>().winningScore)
         {

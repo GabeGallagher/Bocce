@@ -24,13 +24,17 @@ public class BallControl : MonoBehaviour
 
     public bool isObjectInCollisionArea; // determines if there is an object that could collide with us
 
-    public bool isOnFloor, isCounted = false, hitWarningWall = false;
+    public bool isOnFloor, isCounted = false, hitWarningWall = false, isOnArrow = false;
+
+    public GameObject arrow;
 
     Rigidbody rBody;
 
     public Vector3 velocity;
 
     SphereCollider collisionSphere;
+
+    BallParent ballParent;
 
     public bool isTossed = false; //ensures that the kill command is only called once from this object
 
@@ -58,12 +62,11 @@ public class BallControl : MonoBehaviour
         //in an empty arena
         if (gameObject.GetComponent<PallinoControl>())
         {
-            transform.parent.GetComponent<BallParent>().greenBocceCount = 0;
-            transform.parent.GetComponent<BallParent>().redBocceCount = 0;
+            ballParent.greenBocceCount = 0;
+            ballParent.redBocceCount = 0;
         }
         rBody.isKinematic = false;
         isTossed = true;
-        GameObject arrow = GameObject.Find("Arrow");
         if (!arrow)
         {
             Debug.Log("No arrow found");
@@ -75,6 +78,8 @@ public class BallControl : MonoBehaviour
     void Start ()
     {
         rBody = GetComponent<Rigidbody>();
+        ballParent = transform.parent.GetComponent<BallParent>();
+        arrow = GameObject.Find("Arrow");
         spaceKeyObserver += SpaceKeyHandler_BallControl;
         killCommandObserver += KillCommandHandler_BallControl;
 
@@ -125,11 +130,11 @@ public class BallControl : MonoBehaviour
             {
                 if (gameObject.GetComponent<BocceControl>().isGreen)
                 {
-                    ++transform.parent.GetComponent<BallParent>().greenBocceCount;
+                    ++ballParent.greenBocceCount;
                 }
                 else if (!gameObject.GetComponent<BocceControl>().isGreen)
                 {
-                    ++transform.parent.GetComponent<BallParent>().redBocceCount;
+                    ++ballParent.redBocceCount;
                 }
                 else
                 {
@@ -184,19 +189,10 @@ public class BallControl : MonoBehaviour
 
         if (rBody.isKinematic)
         {
-            float avgVel = GetAverageVelocity(rBody.velocity);
-
             if (rBody.velocity == Vector3.zero && isObjectInCollisionArea && isTossed)
             {
                 rBody.isKinematic = false;
             }
-        }
-
-        //Fix bug where Bocces would sometimes get stuck at the origin
-        if (Mathf.Approximately(transform.position.x, 0.0f) && rBody.velocity == Vector3.zero)
-        {
-            rBody.isKinematic = false;
-            rBody.AddRelativeForce(new Vector3(-1.0f, 0.0f, 0.0f), ForceMode.Impulse);
         }
 	}
 }

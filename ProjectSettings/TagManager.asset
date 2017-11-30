@@ -7,6 +7,7 @@ TagManager:
   - Wall
   - Ball
   - PowerBar
+  - Arrow
   layers:
   - Default
   - TransparentFX
