@@ -133,7 +133,7 @@ MonoBehaviour:
   pallino: {fileID: 0}
   layerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   distance: 0
   isGreen: 0
 --- !u!114 &11449364

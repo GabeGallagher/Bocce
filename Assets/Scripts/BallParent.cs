@@ -22,7 +22,7 @@ public class BallParent : MonoBehaviour
     public bool isGreenTurn; //Just determines if it's Green's turn. Could evaluate for red, doesn't matter
                              //as long as the evaluation is consistent.
 
-    public int redBocceCount, greenBocceCount, scoreReportCount, winningScore;
+    public int redBocceCount, greenBocceCount, tossesPerRound, winningScore;
 
     ArrowControl arrow;
 
@@ -61,18 +61,30 @@ public class BallParent : MonoBehaviour
         newRoundReporter();
     }
 
+    /* Once each player has tossed their bocces (in a normal round, each player get 4 throws, but this
+     * number may be adjusted for testing purposes) the game moves to a score gathering state. Each bocce
+     * is tested for its distance to the pallino and sorted based on that distance. Once the list of
+     * bocces is sorted, we check the color of the closest bocce to the pallino. Based on the color of the
+     * closest bocce, we then see how many bocces of that color are closer to the pallino than the closest
+     * bocce of the other color. Once we encounter the closest bocce of the other color, we stop counting,
+     * add the count to the total score, and restart the round.
+     * 
+     * method is called in the KillCommandHandler and should call the begin new round method to reset the
+     * board
+     */
     void GetScore()
     {
+        Debug.Log("Get score called");
         List<GameObject> bocceList = new List<GameObject>();
         List<float> distanceList = new List<float>();
 
-        //go through each bocce in this game object's transform
+        //go through each bocce on the field and measure its distance to the pallino
         for (int i = 0; i < transform.childCount; ++i)
         {
             if (transform.GetChild(i).GetComponent<BocceControl>())
             {
                 BocceControl bocce = transform.GetChild(i).GetComponent<BocceControl>();
-                //get the distance between that bocce and the pallino
+                //get the distances and build distance list
                 bocce.distance = bocce.GetDistance();
                 distanceList.Add(bocce.distance);
             }
@@ -95,7 +107,6 @@ public class BallParent : MonoBehaviour
         }
 
         //get the color of the closest item in the list
-        //bool isGreenClosest;
         if (bocceList[0].GetComponent<BocceControl>().isGreen)
         {
             ++greenTeamScore;
@@ -110,6 +121,7 @@ public class BallParent : MonoBehaviour
                 }
                 else
                 {
+                    //TODO fix possible bugs occuring here when bocces are equidistant from pallino
                     //if two balls of opposite colors are equidistant from the pallino, give both teams a
                     //point and restart the round
                     if (Mathf.Approximately(bocceList[i].GetComponent<BocceControl>().distance,
@@ -119,7 +131,10 @@ public class BallParent : MonoBehaviour
                         ++redTeamScore;
                         BeginNewRound(greenTeamScore, redTeamScore);
                     }
-                    BeginNewRound(greenTeamScore, redTeamScore);
+                    else
+                    {
+                        BeginNewRound(greenTeamScore, redTeamScore); 
+                    }
                 }
             }
         }
@@ -137,6 +152,7 @@ public class BallParent : MonoBehaviour
                 }
                 else
                 {
+                    //TODO fix possible bugs occuring here when bocces are equidistant from pallino
                     if (Mathf.Approximately(bocceList[i].GetComponent<BocceControl>().distance,
                         bocceList[0].GetComponent<BocceControl>().distance))
                     {
@@ -146,7 +162,10 @@ public class BallParent : MonoBehaviour
                         ++redTeamScore;
                         BeginNewRound(greenTeamScore, redTeamScore);
                     }
-                    BeginNewRound(greenTeamScore, redTeamScore);
+                    else
+                    {
+                        BeginNewRound(greenTeamScore, redTeamScore); 
+                    }
                 }
             }
         }
@@ -159,7 +178,7 @@ public class BallParent : MonoBehaviour
     void KillCommandHandler_BallParent()
     {
         Debug.Log("Kill Command on: " + name);
-        if (greenBocceCount < scoreReportCount && redBocceCount < scoreReportCount)
+        if (greenBocceCount < tossesPerRound && redBocceCount < tossesPerRound)
         {
             InstantiateNewBocce();
         }

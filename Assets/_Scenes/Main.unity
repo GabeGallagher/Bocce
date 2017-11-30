@@ -581,6 +581,11 @@ Prefab:
     - target: {fileID: 114518402122496966, guid: 9edaafb962337504bbfe9235febeedf2,
         type: 2}
       propertyPath: winningScore
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114518402122496966, guid: 9edaafb962337504bbfe9235febeedf2,
+        type: 2}
+      propertyPath: tossesPerRound
       value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
