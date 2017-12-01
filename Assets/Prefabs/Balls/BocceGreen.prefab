@@ -134,8 +134,7 @@ MonoBehaviour:
   layerMask:
     serializedVersion: 2
     m_Bits: 256
-  distance: 0
-  isGreen: 0
+  isGreen: 1
 --- !u!114 &11485216
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -165,6 +164,8 @@ MonoBehaviour:
   isOnFloor: 0
   isCounted: 0
   hitWarningWall: 0
+  isOnArrow: 0
+  arrow: {fileID: 0}
   velocity: {x: 0, y: 0, z: 0}
   isTossed: 0
   isDead: 0

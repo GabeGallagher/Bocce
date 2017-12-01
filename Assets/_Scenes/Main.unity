@@ -505,10 +505,11 @@ MonoBehaviour:
   isGreenTurn: 1
   redBocceCount: 0
   greenBocceCount: 0
-  tossesPerRound: 2
-  winningScore: 3
+  tossesPerRound: 4
+  winningScore: 7
   greenTeamScore: 0
   redTeamScore: 0
+  isReadingKillCommand: 0
 --- !u!4 &431064082
 Transform:
   m_ObjectHideFlags: 0

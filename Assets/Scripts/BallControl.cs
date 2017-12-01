@@ -75,7 +75,7 @@ public class BallControl : MonoBehaviour
         rBody.AddRelativeForce(new Vector3(1.0f, liftAdjustment, 0.0f) * force, ForceMode.Impulse);
     }
 
-    void Start ()
+    void Start()
     {
         rBody = GetComponent<Rigidbody>();
         ballParent = transform.parent.GetComponent<BallParent>();

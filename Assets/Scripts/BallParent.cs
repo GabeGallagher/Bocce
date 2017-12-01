@@ -79,18 +79,17 @@ public class BallParent : MonoBehaviour
      */
     void GetScore()
     {
-        Debug.Log("Get score called");
         List<GameObject> bocceList = new List<GameObject>();
         List<float> distanceList = new List<float>();
 
-        //go through each bocce on the field and measure its distance to the pallino
+        //go through each bocce on the field and measure its distance to the pallino ignoring bocces that
+        //hit the back wall
         for (int i = 0; i < transform.childCount; ++i)
         {
-            if (transform.GetChild(i).GetComponent<BocceControl>())
+            if (transform.GetChild(i).GetComponent<BocceControl>()
+                && !transform.GetChild(i).GetComponent<BallControl>().hitWarningWall)
             {
                 BocceControl bocce = transform.GetChild(i).GetComponent<BocceControl>();
-                //get the distances and build distance list
-                //bocce.distance = bocce.GetDistance();
                 distanceList.Add(bocce.GetDistance());
             }
         }
@@ -200,52 +199,28 @@ public class BallParent : MonoBehaviour
         }
     }
 
-    bool CheckForObjectAtOrigin()
-    {
-        for (int i = 0; i < transform.childCount; ++i)
-        {
-            if(transform.GetChild(i).gameObject.tag == "Ball" 
-                && transform.GetChild(i).transform.position == Vector3.zero)
-            {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void InstantiateNewBocce()
     {
-        bool isBallAtOrigin = CheckForObjectAtOrigin();
-
-        Debug.Log("Is ball at origin: " + isBallAtOrigin);
-
-        if (!isBallAtOrigin)
+        Debug.Log("Instantiating new Bocce");
+        if (!isGreenTurn)
         {
-            Debug.Log("Instantiating new Bocce");
-            if (!isGreenTurn)
-            {
-                ball = Instantiate(boccePrefabGreen, transform.position, Quaternion.identity)
-                    as GameObject;
-                ball.GetComponent<BocceControl>().isGreen = true;
-                isGreenTurn = true;
-            }
-            else
-            {
-                ball = Instantiate(boccePrefabRed, transform.position, Quaternion.identity)
-                    as GameObject;
-                ball.GetComponent<BocceControl>().isGreen = false;
-                isGreenTurn = false;
-            }
-            ball.transform.parent = transform;
-            ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
-            arrow = transform.GetChild(0).GetComponent<ArrowControl>();
-            arrow.ball = ball;
-            arrow.isRotating = true; 
+            ball = Instantiate(boccePrefabGreen, transform.position, Quaternion.identity)
+                as GameObject;
+            ball.GetComponent<BocceControl>().isGreen = true;
+            isGreenTurn = true;
         }
         else
         {
-            Debug.Log("There's already a ball at the origin");
+            ball = Instantiate(boccePrefabRed, transform.position, Quaternion.identity)
+                as GameObject;
+            ball.GetComponent<BocceControl>().isGreen = false;
+            isGreenTurn = false;
         }
+        ball.transform.parent = transform;
+        ball.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
+        arrow = transform.GetChild(0).GetComponent<ArrowControl>();
+        arrow.ball = ball;
+        arrow.isRotating = true;
     }
 
     void GetPallino()

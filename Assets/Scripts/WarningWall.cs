@@ -11,7 +11,9 @@ public class WarningWall : MonoBehaviour
 {
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.Log(collision.gameObject.name + " hit the back wall and cannot be counted for scoring");
-        //Logic to invalidate scoring here...
+        if (collision.gameObject.GetComponent<BocceControl>())
+        {
+            collision.gameObject.GetComponent<BallControl>().hitWarningWall = true;
+        }
     }
 }
