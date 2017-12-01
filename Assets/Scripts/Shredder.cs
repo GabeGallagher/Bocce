@@ -12,7 +12,7 @@ using System.Collections;
 
 public class Shredder : MonoBehaviour
 {
-    public GameObject ballsParent;
+    public GameObject ballsParent, arrow;
 
     public Camera mainCamera;
 
@@ -24,9 +24,9 @@ public class Shredder : MonoBehaviour
 
     private void OnTriggerEnter(Collider trigger)
     {
-        Debug.Log("Triggered by: " + trigger.name);
+        //Debug.Log("Triggered by: " + trigger.name);
 
-        if (trigger.GetComponent<BocceControl>() && !trigger.GetComponent<PallinoControl>())
+        if (trigger.GetComponent<BocceControl>()/* && !trigger.GetComponent<PallinoControl>()*/)
         {
             if (trigger.GetComponent<BocceControl>().isGreen)
             {
@@ -51,6 +51,30 @@ public class Shredder : MonoBehaviour
             //Update the ball in the UIControl
             uI.GetComponent<UIControl>().isDestroyed = true;
         }
+        else if (trigger.GetComponent<PallinoControl>())
+        {
+            Debug.Log("Shredder triggered by pallino");
+
+            Destroy(trigger.gameObject, trigger.GetComponent<BallControl>().delayTime);
+            ++pallinoShredCount;
+
+            ballsParent.GetComponent<BallParent>().InstantiateNewPallino();
+            for (int i = 0; i < ballsParent.transform.childCount; ++i)
+            {
+                if (ballsParent.transform.GetChild(i).GetComponent<PallinoControl>())
+                {
+                    ball = ballsParent.transform.GetChild(i).gameObject;
+                }
+            }
+            //Update ball focus in main camera
+            mainCamera.GetComponent<CameraControl>().ball = ball;
+
+            //Update the ball in the UIControl
+            uI.GetComponent<UIControl>().pallinoDestroyed = true;
+
+            //Update ball in Arrow
+            arrow.GetComponent<ArrowControl>().GetBall();
+        }
     }
 
     void Update()
@@ -61,6 +85,8 @@ public class Shredder : MonoBehaviour
             ball = ballsParent.transform.GetChild(ballsParent.transform.childCount - 1).gameObject;
             mainCamera.transform.position = ball.transform.localPosition +
                 mainCamera.GetComponent<CameraControl>().offset;
+            //Update the focus for the camera to the new ball
+            ball = mainCamera.GetComponent<CameraControl>().ball;
         }
     }
 }

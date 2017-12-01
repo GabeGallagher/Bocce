@@ -17,7 +17,7 @@ public class ArrowControl : MonoBehaviour
 
     public bool isRotating = true;
 
-    void GetBall()
+    public void GetBall()
     {
         GameObject ballParent = transform.parent.gameObject;
         for (int i = 0; i < ballParent.transform.childCount; ++i)
@@ -30,6 +30,10 @@ public class ArrowControl : MonoBehaviour
         if (!ball)
         {
             Debug.Log("Error finding pallino");
+        }
+        else
+        {
+            isRotating = true;
         }
     }
 

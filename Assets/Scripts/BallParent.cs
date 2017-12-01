@@ -199,6 +199,18 @@ public class BallParent : MonoBehaviour
         }
     }
 
+    public void InstantiateNewPallino()
+    {
+        GameObject pallino = Instantiate(pallinoPrefab, transform.position, Quaternion.identity)
+            as GameObject;
+        pallino.transform.parent = transform;
+        GetPallino();
+        pallino.GetComponent<BallControl>().killCommandObserver += KillCommandHandler_BallParent;
+        arrow = transform.GetChild(0).GetComponent<ArrowControl>();
+        arrow.ball = ball;
+        arrow.isRotating = true;
+    }
+
     public void InstantiateNewBocce()
     {
         Debug.Log("Instantiating new Bocce");
@@ -234,7 +246,7 @@ public class BallParent : MonoBehaviour
         }
         if (!ball)
         {
-            Debug.Log("Error getting ball");
+            Debug.Log("Error getting pallino");
         }
     }
 

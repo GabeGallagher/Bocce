@@ -22,13 +22,14 @@ public class CameraControl : MonoBehaviour
 
     int childCount;
 
-    bool isObservingKillCommand = true;
+    public bool isObservingKillCommand = true;
 
     public bool isChanging = false;
 
     //Returns which ball the camera should follow
     GameObject GetBallCamFocuses()
     {
+        Debug.Log("Changing Camera focus");
         childCount = GameObject.Find("Balls").transform.childCount;
         GameObject updatedBall = GameObject.Find("Balls").transform.GetChild(childCount - 1).gameObject;
         updatedBall.GetComponent<BallControl>().killCommandObserver += KillCommandObserver_CameraControl;
@@ -38,6 +39,7 @@ public class CameraControl : MonoBehaviour
     //what this script should do when a moving ball comes to rest
     void KillCommandObserver_CameraControl()
     {
+        Debug.Log("Main Camera Observing Kills Command");
         if (isObservingKillCommand)
         {
             callTime = Time.timeSinceLevelLoad;
@@ -59,6 +61,10 @@ public class CameraControl : MonoBehaviour
         if (!ball)
         {
             Debug.Log("Error getting pallino in camera");
+        }
+        else
+        {
+            ball.GetComponent<BallControl>().killCommandObserver += KillCommandObserver_CameraControl;
         }
     }
     

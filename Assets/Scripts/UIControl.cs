@@ -67,9 +67,8 @@ public class UIControl : MonoBehaviour
             //powerBar.transform.parent = transform;
             powerBar.transform.SetParent(transform, false);
             powerBar.transform.localPosition = sliderPrefab.transform.position;
-            powerBar.GetComponent<PowerBarControl>().ball = ball; //set the ball associated with
-                                                                          //the bar to the currently
-                                                                          //selected ball
+            powerBar.GetComponent<PowerBarControl>().ball = ball; //set the ball associated with bar to the 
+                                                                  //currently selected ball
         }
     }
 
